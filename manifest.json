@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-23T07:48:44Z",
+  "updated": "2026-10-23T07:49:01Z",
   "components": {
     "agent": {
       "version": "0.8.0",
@@ -66,6 +66,20 @@
           "url": "https://github.com/alberthorta/shepherd-releases/releases/download/server-v0.8.0/shepherd-server_0.8.0_linux_arm64.tar.gz",
           "sha256": "4448cab5ff239d72f7aa91a3675a001c9ecafc4b460d5a2c7db8f222da041694",
           "size": 6787242
+        }
+      ]
+    },
+    "viewer": {
+      "version": "0.8.0",
+      "released": "2026-10-23T07:49:01Z",
+      "assets": [
+        {
+          "name": "Shepherd_0.8.0_darwin_arm64.zip",
+          "os": "darwin",
+          "arch": "arm64",
+          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/viewer-v0.8.0/Shepherd_0.8.0_darwin_arm64.zip",
+          "sha256": "a111964a846981057ef99ea1afe9bac520d775ad6088d05fc8427d41a2ba63b8",
+          "size": 10009239
         }
       ]
     }
