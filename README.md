@@ -42,12 +42,12 @@ claude plugin install ramat@ramat
 Then link the machine to your account:
 
 ```sh
-ramat login https://api.ramat.app
+ramat login
 ```
 
 A browser page opens: log in and press **Authorize**. Check that the page shows the same code
 as the terminal. On a machine with no browser (a server over SSH), use
-`ramat login --no-browser https://api.ramat.app`: it prints the address and the code,
+`ramat login --no-browser`: it prints the address and the code,
 and you approve it from the browser of any other computer.
 
 Sessions you start from now on appear in Ramat. Sessions that were already open before the
@@ -61,7 +61,7 @@ To check that it works: `ramat status` lists the sessions of this machine.
 curl -fsSL https://raw.githubusercontent.com/alberthorta/ramat-releases/main/install.sh | sh -s viewer
 ```
 
-It installs Ramat.app in `~/Applications`. Open it, enter `https://api.ramat.app` and press
+It installs Ramat.app in `~/Applications`. Open it and press
 **Log In with the Browser**: a browser page opens, log in and authorize the viewer, like for a
 machine. The key of the viewer is kept in the Secure Enclave of your Mac.
 
