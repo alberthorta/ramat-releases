@@ -138,6 +138,9 @@ data = "metadata"
 | `[[family]]` `folder` | | Sessions started in this folder or below it belong to the family. `~` is your home folder. The most specific folder wins. |
 | `[[family]]` `family` | | Name of the family: a label to group and filter sessions in the viewer. |
 | `[[family]]` `data` | `full` | Data level of the family. When several rules of one family set it, the stricter level wins. |
+| `[[family]]` `encrypt` | `false` | Encrypt the family's content end to end: transcript and hook payloads (prompts, tool input and output, answers). Only your viewer can read it; the server cannot search it. |
+| `[[family]]` `encrypt_titles` | `false` | Encrypt the session names and the subagent tasks too. Without it they stay readable on the server. |
+| `default_encrypt`, `default_encrypt_titles` | `false` | The same, for the default family. |
 
 A session keeps the family it had when it started, even if you change the rules later. A new
 data level applies at once, also to events that were not sent yet.
@@ -157,6 +160,23 @@ for the same folder in the file replaces it, data level included.
 
 Environment variables are never sent, at any level: only a few that Claude Code sets itself
 (its version, the process id, CLI or desktop app).
+
+### End-to-end encryption
+
+A family with `encrypt = true` sends its content sealed with your key: only your viewer can
+read it, the server stores it but cannot read or search it. State, tools, times, model and
+token counts are never encrypted, so the session list works the same.
+
+1. In the viewer, open **Encryption** in the toolbar and create your key with a passphrase.
+   Save the **recovery key** it shows in your password manager: without the passphrase and the
+   recovery key, encrypted data cannot be read by anyone.
+2. Each agent pins your key the next time it connects. Check that `ramat key` shows the same
+   fingerprint as the viewer.
+3. Turn on `encrypt` (and, if you want, `encrypt_titles`) for the families you choose.
+
+Until an agent has your key, an encrypted family sends no content at all, and that content is
+not sent later: create the key before turning `encrypt` on. On another Mac, the viewer unlocks
+the key with your passphrase (or the recovery key).
 
 ## Manifest and signature
 
