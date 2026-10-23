@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-23T10:12:16Z",
+  "updated": "2026-10-23T10:12:33Z",
   "components": {
     "agent": {
       "version": "0.10.0",
@@ -40,16 +40,16 @@
       ]
     },
     "viewer": {
-      "version": "0.8.0",
-      "released": "2026-10-23T07:49:01Z",
+      "version": "0.9.0",
+      "released": "2026-10-23T10:12:33Z",
       "assets": [
         {
-          "name": "Shepherd_0.8.0_darwin_arm64.zip",
+          "name": "Shepherd_0.9.0_darwin_arm64.zip",
           "os": "darwin",
           "arch": "arm64",
-          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/viewer-v0.8.0/Shepherd_0.8.0_darwin_arm64.zip",
-          "sha256": "a111964a846981057ef99ea1afe9bac520d775ad6088d05fc8427d41a2ba63b8",
-          "size": 10009239
+          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/viewer-v0.9.0/Shepherd_0.9.0_darwin_arm64.zip",
+          "sha256": "82fd138ace9d374246e0b5a0833d97ec181574bd47fb0420a43fe18175d5483d",
+          "size": 10047533
         }
       ]
     }
