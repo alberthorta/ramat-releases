@@ -61,7 +61,7 @@
           {
             "type": "command",
             "command": "ramat hook",
-            "async": true
+            "timeout": 3600
           }
         ]
       }

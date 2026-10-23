@@ -69,6 +69,14 @@ You can also download `Ramat_<version>_darwin_arm64.zip` from the latest `viewer
 and unzip it. A browser download is marked as coming from the internet and the app is not
 notarized, so the first time macOS blocks it: right click the app, then **Open**.
 
+### Answer from the viewer
+
+When a session asks for a permission or asks you a question, the viewer shows it at the top of
+the session's details, with **Allow** / **Deny** or the question's options. The terminal shows
+the same prompt at the same time: the first answer wins. It works for fields at the `full`
+data level (or encrypted, with your key unlocked in the viewer), with agent 0.15.0 or later,
+in sessions started after the agent's plugin updated.
+
 ## Updates
 
 Both parts update by themselves. The Ramat server checks this repo every 15 minutes and tells
@@ -82,7 +90,7 @@ below and check the SHA-256 of the file. They never install an older version.
   installs the latest version now; `ramat update --check` only says whether there is one.
 - **Viewer**: when it starts, it installs a new version before you use it and opens again. When a
   new version comes out while it is open, an **Update to …** button appears in the toolbar. The
-  Machines view shows the agent version of each machine and marks the ones that are behind.
+  Farms view shows the agent version of each machine and marks the ones that are behind.
 
 Older agents (before 0.10.0) do not update by themselves: run the install command once more.
 
@@ -141,6 +149,8 @@ data = "metadata"
 | `[[field]]` `encrypt` | `false` | Encrypt the field's content end to end: transcript and hook payloads (prompts, tool input and output, answers). Only your viewer can read it; the server cannot search it. |
 | `[[field]]` `encrypt_titles` | `false` | Encrypt the session names and the subagent tasks too. Without it they stay readable on the server. |
 | `default_encrypt`, `default_encrypt_titles` | `false` | The same, for the default field. |
+| `[[field]]` `control` | `true` | Let your viewer act on these sessions: close one, allow or deny a permission, answer a question. Commands are signed with your key; the server cannot make them. |
+| `default_control` | `true` | The same, for the default field. |
 
 A field groups sessions by folder: personal, work, a client. It was called a **family**
 before, and the old names still work: `default_family`, `[[family]]` and `family = "..."`.
