@@ -80,12 +80,58 @@ rm -rf ~/Applications/Shepherd.app
 Your local data stays in `~/.shepherd` (and the viewer's login in
 `~/Library/Application Support/Shepherd Viewer`): delete those folders too to remove everything.
 
-## What leaves your machine
+## Configuration
 
-What the agent sends to the server depends on the data level of each family of sessions, set in
-`~/.shepherd/config.toml` (`full`, `titles` or `metadata`). The file explains each level. The
-default is `full`: prompts, tool input and output, and transcripts. Environment variables are
-never sent.
+The agent reads `~/.shepherd/config.toml`. It is created with comments the first time the
+service starts. Changes apply a few seconds after you save the file, with no restart. While the
+service runs, a file with an error is ignored and the last good configuration stays; the reason
+is in `~/.shepherd/daemon.log`. With an error at start, the service does not start, so a typo can
+never send more than you chose.
+
+```toml
+# Family of the sessions that match no folder rule.
+default_family = "personal"
+
+# Data level of that family: full, titles or metadata.
+default_data = "full"
+
+# Local queue while the server cannot be reached.
+queue_max_days = 7
+queue_max_mb = 200
+
+# One block per folder rule.
+[[family]]
+folder = "~/work"
+family = "work"
+data = "metadata"
+```
+
+| Option | Default | What it does |
+|:--|:--|:--|
+| `default_family` | `default` | Family of the sessions started outside every `[[family]]` folder. |
+| `default_data` | `full` | Data level of the default family. |
+| `queue_max_days` | `7` | Events wait in a local queue while the server is not reachable. Older events are dropped. |
+| `queue_max_mb` | `200` | Size limit of that queue. When it is bigger, the oldest events are dropped. |
+| `[[family]]` `folder` | | Sessions started in this folder or below it belong to the family. `~` is your home folder. The most specific folder wins. |
+| `[[family]]` `family` | | Name of the family: a label to group and filter sessions in the viewer. |
+| `[[family]]` `data` | `full` | Data level of the family. When several rules of one family set it, the stricter level wins. |
+
+A session keeps the family it had when it started, even if you change the rules later. A new
+data level applies at once, also to events that were not sent yet.
+
+Built-in rule: sessions in `~/.claude-mem` (helper sessions of the claude-mem plugin) belong to
+the family `claude-mem`. A rule for the same folder in the file replaces it.
+
+### Data levels: what leaves your machine
+
+| Level | What is sent to the server |
+|:--|:--|
+| `full` | Everything below, plus prompts, tool input and output, Claude's answers and the transcript of the conversation (long texts are cut at 64 KB). |
+| `titles` | Everything below, plus the session name and the task of each subagent. |
+| `metadata` | Session state, tool names, times, folder, model and token counts. |
+
+Environment variables are never sent, at any level: only a few that Claude Code sets itself
+(its version, the process id, CLI or desktop app).
 
 ## Manifest and signature
 
