@@ -77,6 +77,19 @@ the same prompt at the same time: the first answer wins. It works for fields at 
 data level (or encrypted, with your key unlocked in the viewer), with agent 0.15.0 or later,
 in sessions started after the agent's plugin updated.
 
+### Send messages from the viewer
+
+The viewer can send a message to a session, as if you typed it in its terminal. Claude Code
+only takes messages from other apps through a *channel*, still a research preview, so start the
+session with Ramat's channel and accept the warning Claude Code shows:
+
+```sh
+claude --dangerously-load-development-channels plugin:ramat@ramat
+```
+
+An alias makes it the default: `alias claude='claude --dangerously-load-development-channels plugin:ramat@ramat'`.
+Such sessions show a message box in the viewer. It needs agent 0.16.0 or later.
+
 ## Updates
 
 Both parts update by themselves. The Ramat server checks this repo every 15 minutes and tells

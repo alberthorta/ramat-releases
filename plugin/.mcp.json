@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "ramat": {
+      "command": "ramat",
+      "args": ["channel"]
+    }
+  }
+}
