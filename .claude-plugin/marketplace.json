@@ -1,0 +1,13 @@
+{
+  "name": "shepherd",
+  "owner": {
+    "name": "Albert Horta"
+  },
+  "plugins": [
+    {
+      "description": "Sends Claude Code session events to the local Shepherd daemon. Needs the shepherd binary in the PATH.",
+      "name": "shepherd",
+      "source": "./plugin"
+    }
+  ]
+}
