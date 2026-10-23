@@ -69,10 +69,22 @@ You can also download `Shepherd_<version>_darwin_arm64.zip` from the latest `vie
 and unzip it. A browser download is marked as coming from the internet and the app is not
 notarized, so the first time macOS blocks it: right click the app, then **Open**.
 
-## Update
+## Updates
 
-Run the same install command again. It installs the latest version and restarts the service.
-Then run `claude plugin marketplace update shepherd` to get the latest plugin.
+Both parts update by themselves. The Shepherd server checks this repo every 15 minutes and tells
+the connected agents and viewers when there is a new version; they also check when they start.
+Before installing anything, they download `manifest.json`, check its signature with the key
+below and check the SHA-256 of the file. They never install an older version.
+
+- **Agent**: installs the new version, updates the Claude Code plugin and restarts the service.
+  The previous binary stays as `~/.local/bin/shepherd.old`. To only be told (a line in
+  `~/.shepherd/daemon.log`), set `auto_update = false` in `config.toml`. `shepherd update`
+  installs the latest version now; `shepherd update --check` only says whether there is one.
+- **Viewer**: when it starts, it installs a new version before you use it and opens again. When a
+  new version comes out while it is open, an **Update to …** button appears in the toolbar. The
+  Machines view shows the agent version of each machine and marks the ones that are behind.
+
+Older agents (before 0.10.0) do not update by themselves: run the install command once more.
 
 ## Uninstall
 
@@ -119,6 +131,7 @@ data = "metadata"
 |:--|:--|:--|
 | `default_family` | `default` | Family of the sessions started outside every `[[family]]` folder. |
 | `default_data` | `full` | Data level of the default family. |
+| `auto_update` | `true` | Install new versions of the agent by itself. `false`: only write in the log that one is available. |
 | `idle_after` | `15m` | A session waiting for you longer than this shows as **idle** instead of **waiting for you**: same meaning (your turn), it only goes lower in the list. A duration of at least `1m`, like `45m` or `2h`. |
 | `queue_max_days` | `7` | Events wait in a local queue while the server is not reachable. Older events are dropped. |
 | `queue_max_mb` | `200` | Size limit of that queue. When it is bigger, the oldest events are dropped. |
@@ -155,7 +168,7 @@ file. `manifest.json.sig` is an ed25519 signature of the exact bytes of `manifes
 R6PflNkrrju0+CgHLzFm59q6J2c61zVa+W/3ArpM6pM=
 ```
 
-Automatic updates (coming later) will only trust a manifest signed with this key.
+Updates only trust a manifest signed with this key.
 
 ## License
 

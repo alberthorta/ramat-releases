@@ -1,41 +1,41 @@
 {
-  "updated": "2026-10-23T09:56:35Z",
+  "updated": "2026-10-23T10:12:16Z",
   "components": {
     "agent": {
-      "version": "0.9.1",
-      "released": "2026-10-23T09:56:35Z",
+      "version": "0.10.0",
+      "released": "2026-10-23T10:12:16Z",
       "assets": [
         {
-          "name": "shepherd_0.9.1_darwin_arm64.tar.gz",
+          "name": "shepherd_0.10.0_darwin_arm64.tar.gz",
           "os": "darwin",
           "arch": "arm64",
-          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/agent-v0.9.1/shepherd_0.9.1_darwin_arm64.tar.gz",
-          "sha256": "32f298ffca972692df0205bce63d2d6b231d337160abd225e62e9bf488fccf3a",
-          "size": 7059698
+          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/agent-v0.10.0/shepherd_0.10.0_darwin_arm64.tar.gz",
+          "sha256": "ea01f7bb48309e599f6640806f1ddb16b3504ec215649992a893ce8325985ace",
+          "size": 7104615
         },
         {
-          "name": "shepherd_0.9.1_darwin_amd64.tar.gz",
+          "name": "shepherd_0.10.0_darwin_amd64.tar.gz",
           "os": "darwin",
           "arch": "amd64",
-          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/agent-v0.9.1/shepherd_0.9.1_darwin_amd64.tar.gz",
-          "sha256": "912da07f421ecf4f437a6b7822ec5037ae67ccfa04b825b1c73f921b8c0df5e7",
-          "size": 7478319
+          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/agent-v0.10.0/shepherd_0.10.0_darwin_amd64.tar.gz",
+          "sha256": "29dc39d28e400852607a1188aee6249fdc79612d9e852e287e6510d819bb025d",
+          "size": 7525185
         },
         {
-          "name": "shepherd_0.9.1_linux_amd64.tar.gz",
+          "name": "shepherd_0.10.0_linux_amd64.tar.gz",
           "os": "linux",
           "arch": "amd64",
-          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/agent-v0.9.1/shepherd_0.9.1_linux_amd64.tar.gz",
-          "sha256": "af450a8ec8b1ed66a0bde04fe15ffadc9d400988424f0fa691ec89dc389378c8",
-          "size": 7438232
+          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/agent-v0.10.0/shepherd_0.10.0_linux_amd64.tar.gz",
+          "sha256": "269f5b612d5372d71f728efc0454a0184154fc41a0b48fd019af9df92d565d82",
+          "size": 7486231
         },
         {
-          "name": "shepherd_0.9.1_linux_arm64.tar.gz",
+          "name": "shepherd_0.10.0_linux_arm64.tar.gz",
           "os": "linux",
           "arch": "arm64",
-          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/agent-v0.9.1/shepherd_0.9.1_linux_arm64.tar.gz",
-          "sha256": "85a0c9261b992070b202c863a5bc5331890a744e298dfa3b93ede8cc2e8d2590",
-          "size": 6865546
+          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/agent-v0.10.0/shepherd_0.10.0_linux_arm64.tar.gz",
+          "sha256": "e52f76df546aef73b0ca2a83a930b3a184907fc10b316ed827061aebef57e873",
+          "size": 6915328
         }
       ]
     },
