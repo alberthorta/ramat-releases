@@ -7,11 +7,11 @@ the compiled builds. The source code is private.
 There are two parts to install:
 
 - **Agent** (`ramat`): runs on each machine where you use Claude Code (macOS or Linux). It
-  gets the session events from a Claude Code plugin and sends them to your Ramat server.
+  gets the session events from a Claude Code plugin and sends them to the Ramat server.
 - **Viewer** (Ramat.app): a macOS app that shows the sessions of all your machines, live.
 
-Both need a Ramat server and an account on it. Ask the person who runs the server for its
-address (for example `https://ramat.example.com`) and for your account.
+Both need an account on the Ramat server, `https://api.ramat.app`. Accounts are by invitation
+only: you get an invite link, open it and create your account.
 
 Requirements: Claude Code on a Mac (Apple silicon or Intel) or on Linux (x86-64 or ARM64, with
 systemd) for the agent, and macOS 15 or later for the viewer. Windows is not supported yet.
@@ -42,12 +42,12 @@ claude plugin install ramat@ramat
 Then link the machine to your account:
 
 ```sh
-ramat login https://ramat.example.com
+ramat login https://api.ramat.app
 ```
 
 A browser page opens: log in and press **Authorize**. Check that the page shows the same code
 as the terminal. On a machine with no browser (a server over SSH), use
-`ramat login --no-browser https://ramat.example.com`: it prints the address and the code,
+`ramat login --no-browser https://api.ramat.app`: it prints the address and the code,
 and you approve it from the browser of any other computer.
 
 Sessions you start from now on appear in Ramat. Sessions that were already open before the
@@ -61,7 +61,7 @@ To check that it works: `ramat status` lists the sessions of this machine.
 curl -fsSL https://raw.githubusercontent.com/alberthorta/ramat-releases/main/install.sh | sh -s viewer
 ```
 
-It installs Ramat.app in `~/Applications`. Open it, enter the server address and press
+It installs Ramat.app in `~/Applications`. Open it, enter `https://api.ramat.app` and press
 **Log In with the Browser**: a browser page opens, log in and authorize the viewer, like for a
 machine. The key of the viewer is kept in the Secure Enclave of your Mac.
 
