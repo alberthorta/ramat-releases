@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-23T18:22:13Z",
+  "updated": "2026-10-23T18:23:22Z",
   "components": {
     "agent": {
       "version": "0.16.0",
@@ -40,16 +40,16 @@
       ]
     },
     "viewer": {
-      "version": "0.15.1",
-      "released": "2026-10-23T18:05:34Z",
+      "version": "0.16.0",
+      "released": "2026-10-23T18:23:22Z",
       "assets": [
         {
-          "name": "Ramat_0.15.1_darwin_arm64.zip",
+          "name": "Ramat_0.16.0_darwin_arm64.zip",
           "os": "darwin",
           "arch": "arm64",
-          "url": "https://github.com/alberthorta/ramat-releases/releases/download/viewer-v0.15.1/Ramat_0.15.1_darwin_arm64.zip",
-          "sha256": "6811ea4c19391b99b1c6189c44fb480826ca5a12dfad639f4a9e3e3d53677b09",
-          "size": 10590118
+          "url": "https://github.com/alberthorta/ramat-releases/releases/download/viewer-v0.16.0/Ramat_0.16.0_darwin_arm64.zip",
+          "sha256": "ef136671f6dc9efa62cd5d79b9c52af4e0f9ccb3f62cf98982814958a921baef",
+          "size": 10620764
         }
       ]
     }
