@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-23T07:48:34Z",
+  "updated": "2026-10-23T07:48:44Z",
   "components": {
     "agent": {
       "version": "0.8.0",
@@ -44,6 +44,28 @@
           "url": "https://github.com/alberthorta/shepherd-releases/releases/download/agent-v0.8.0/shepherd_0.8.0_windows_amd64.zip",
           "sha256": "472ef2a4fe9d35ec3d248ab75b28d3752e5229555ab615241a80b53ad9328a0a",
           "size": 7591110
+        }
+      ]
+    },
+    "server": {
+      "version": "0.8.0",
+      "released": "2026-10-23T07:48:44Z",
+      "assets": [
+        {
+          "name": "shepherd-server_0.8.0_linux_amd64.tar.gz",
+          "os": "linux",
+          "arch": "amd64",
+          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/server-v0.8.0/shepherd-server_0.8.0_linux_amd64.tar.gz",
+          "sha256": "2950dc6fa8b60f93239845619312226ec8695ecb399d2ef38894e44d8224de32",
+          "size": 7355654
+        },
+        {
+          "name": "shepherd-server_0.8.0_linux_arm64.tar.gz",
+          "os": "linux",
+          "arch": "arm64",
+          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/server-v0.8.0/shepherd-server_0.8.0_linux_arm64.tar.gz",
+          "sha256": "4448cab5ff239d72f7aa91a3675a001c9ecafc4b460d5a2c7db8f222da041694",
+          "size": 6787242
         }
       ]
     }
