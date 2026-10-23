@@ -6,15 +6,15 @@ the compiled builds. The source code is private.
 
 There are two parts to install:
 
-- **Agent** (`shepherd`): runs on each machine where you use Claude Code. It gets the session
-  events from a Claude Code plugin and sends them to your Shepherd server.
+- **Agent** (`shepherd`): runs on each machine where you use Claude Code (macOS or Linux). It
+  gets the session events from a Claude Code plugin and sends them to your Shepherd server.
 - **Viewer** (Shepherd.app): a macOS app that shows the sessions of all your machines, live.
 
 Both need a Shepherd server and an account on it. Ask the person who runs the server for its
 address (for example `https://shepherd.example.com`) and for your account.
 
-Requirements: a Mac (Apple silicon or Intel) with Claude Code for the agent, and macOS 15 or
-later for the viewer. Linux and Windows are not supported yet.
+Requirements: Claude Code on a Mac (Apple silicon or Intel) or on Linux (x86-64 or ARM64, with
+systemd) for the agent, and macOS 15 or later for the viewer. Windows is not supported yet.
 
 ## Install the agent
 
@@ -24,9 +24,13 @@ Run this in a terminal on each machine with Claude Code:
 curl -fsSL https://raw.githubusercontent.com/alberthorta/shepherd-releases/main/install.sh | sh -s agent
 ```
 
-It downloads the build for your Mac, checks its SHA-256 against the manifest, copies
-`shepherd` to `~/.local/bin` and starts it as a background service (it also starts at login).
+It downloads the build for your machine, checks its SHA-256 against the manifest, copies
+`shepherd` to `~/.local/bin` and starts it as a background service: a launchd agent on macOS
+(it also starts at login), a systemd user service on Linux (`systemctl --user status shepherd`).
 `~/.local/bin` must be in your `PATH`, because the Claude Code hooks call `shepherd`.
+
+On a Linux server, turn on linger so the service keeps running when you log out:
+`loginctl enable-linger`. The install script tells you when it is off.
 
 Then install the Claude Code plugin:
 
@@ -42,7 +46,9 @@ shepherd login https://shepherd.example.com
 ```
 
 A browser page opens: log in and press **Authorize**. Check that the page shows the same code
-as the terminal.
+as the terminal. On a machine with no browser (a server over SSH), use
+`shepherd login --no-browser https://shepherd.example.com`: it prints the address and the code,
+and you approve it from the browser of any other computer.
 
 Sessions you start from now on appear in Shepherd. Sessions that were already open before the
 plugin was installed show as "untracked" until you start them again.
@@ -92,7 +98,7 @@ never send more than you chose.
 # Family of the sessions that match no folder rule.
 default_family = "personal"
 
-# Data level of that family: full, titles or metadata.
+# Data level of that family: full, titles, metadata or none.
 default_data = "full"
 
 # Local queue while the server cannot be reached.
@@ -120,7 +126,8 @@ A session keeps the family it had when it started, even if you change the rules 
 data level applies at once, also to events that were not sent yet.
 
 Built-in rule: sessions in `~/.claude-mem` (helper sessions of the claude-mem plugin) belong to
-the family `claude-mem`. A rule for the same folder in the file replaces it.
+the family `claude-mem` with data level `none`, so nothing of them leaves your machine. A rule
+for the same folder in the file replaces it, data level included.
 
 ### Data levels: what leaves your machine
 
@@ -129,6 +136,7 @@ the family `claude-mem`. A rule for the same folder in the file replaces it.
 | `full` | Everything below, plus prompts, tool input and output, Claude's answers and the transcript of the conversation (long texts are cut at 64 KB). |
 | `titles` | Everything below, plus the session name and the task of each subagent. |
 | `metadata` | Session state, tool names, times, folder, model and token counts. |
+| `none` | Nothing. The sessions stay on your machine: `shepherd status` still shows them. |
 
 Environment variables are never sent, at any level: only a few that Claude Code sets itself
 (its version, the process id, CLI or desktop app).
