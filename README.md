@@ -1,17 +1,17 @@
-# Shepherd releases
+# Ramat releases
 
-Shepherd shows the state of your Claude Code sessions, from several machines, in one place:
+Ramat shows the state of your Claude Code sessions, from several machines, in one place:
 which session is working, which one waits for you, which one needs a permission. This repo has
 the compiled builds. The source code is private.
 
 There are two parts to install:
 
-- **Agent** (`shepherd`): runs on each machine where you use Claude Code (macOS or Linux). It
-  gets the session events from a Claude Code plugin and sends them to your Shepherd server.
-- **Viewer** (Shepherd.app): a macOS app that shows the sessions of all your machines, live.
+- **Agent** (`ramat`): runs on each machine where you use Claude Code (macOS or Linux). It
+  gets the session events from a Claude Code plugin and sends them to your Ramat server.
+- **Viewer** (Ramat.app): a macOS app that shows the sessions of all your machines, live.
 
-Both need a Shepherd server and an account on it. Ask the person who runs the server for its
-address (for example `https://shepherd.example.com`) and for your account.
+Both need a Ramat server and an account on it. Ask the person who runs the server for its
+address (for example `https://ramat.example.com`) and for your account.
 
 Requirements: Claude Code on a Mac (Apple silicon or Intel) or on Linux (x86-64 or ARM64, with
 systemd) for the agent, and macOS 15 or later for the viewer. Windows is not supported yet.
@@ -21,13 +21,13 @@ systemd) for the agent, and macOS 15 or later for the viewer. Windows is not sup
 Run this in a terminal on each machine with Claude Code:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/alberthorta/shepherd-releases/main/install.sh | sh -s agent
+curl -fsSL https://raw.githubusercontent.com/alberthorta/ramat-releases/main/install.sh | sh -s agent
 ```
 
 It downloads the build for your machine, checks its SHA-256 against the manifest, copies
-`shepherd` to `~/.local/bin` and starts it as a background service: a launchd agent on macOS
-(it also starts at login), a systemd user service on Linux (`systemctl --user status shepherd`).
-`~/.local/bin` must be in your `PATH`, because the Claude Code hooks call `shepherd`.
+`ramat` to `~/.local/bin` and starts it as a background service: a launchd agent on macOS
+(it also starts at login), a systemd user service on Linux (`systemctl --user status ramat`).
+`~/.local/bin` must be in your `PATH`, because the Claude Code hooks call `ramat`.
 
 On a Linux server, turn on linger so the service keeps running when you log out:
 `loginctl enable-linger`. The install script tells you when it is off.
@@ -35,51 +35,51 @@ On a Linux server, turn on linger so the service keeps running when you log out:
 Then install the Claude Code plugin:
 
 ```sh
-claude plugin marketplace add alberthorta/shepherd-releases
-claude plugin install shepherd@shepherd
+claude plugin marketplace add alberthorta/ramat-releases
+claude plugin install ramat@ramat
 ```
 
 Then link the machine to your account:
 
 ```sh
-shepherd login https://shepherd.example.com
+ramat login https://ramat.example.com
 ```
 
 A browser page opens: log in and press **Authorize**. Check that the page shows the same code
 as the terminal. On a machine with no browser (a server over SSH), use
-`shepherd login --no-browser https://shepherd.example.com`: it prints the address and the code,
+`ramat login --no-browser https://ramat.example.com`: it prints the address and the code,
 and you approve it from the browser of any other computer.
 
-Sessions you start from now on appear in Shepherd. Sessions that were already open before the
+Sessions you start from now on appear in Ramat. Sessions that were already open before the
 plugin was installed show as "untracked" until you start them again.
 
-To check that it works: `shepherd status` lists the sessions of this machine.
+To check that it works: `ramat status` lists the sessions of this machine.
 
 ## Install the viewer
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/alberthorta/shepherd-releases/main/install.sh | sh -s viewer
+curl -fsSL https://raw.githubusercontent.com/alberthorta/ramat-releases/main/install.sh | sh -s viewer
 ```
 
-It installs Shepherd.app in `~/Applications`. Open it, enter the server address and press
+It installs Ramat.app in `~/Applications`. Open it, enter the server address and press
 **Log In with the Browser**: a browser page opens, log in and authorize the viewer, like for a
 machine. The key of the viewer is kept in the Secure Enclave of your Mac.
 
-You can also download `Shepherd_<version>_darwin_arm64.zip` from the latest `viewer` release
+You can also download `Ramat_<version>_darwin_arm64.zip` from the latest `viewer` release
 and unzip it. A browser download is marked as coming from the internet and the app is not
 notarized, so the first time macOS blocks it: right click the app, then **Open**.
 
 ## Updates
 
-Both parts update by themselves. The Shepherd server checks this repo every 15 minutes and tells
+Both parts update by themselves. The Ramat server checks this repo every 15 minutes and tells
 the connected agents and viewers when there is a new version; they also check when they start.
 Before installing anything, they download `manifest.json`, check its signature with the key
 below and check the SHA-256 of the file. They never install an older version.
 
 - **Agent**: installs the new version, updates the Claude Code plugin and restarts the service.
-  The previous binary stays as `~/.local/bin/shepherd.old`. To only be told (a line in
-  `~/.shepherd/daemon.log`), set `auto_update = false` in `config.toml`. `shepherd update`
-  installs the latest version now; `shepherd update --check` only says whether there is one.
+  The previous binary stays as `~/.local/bin/ramat.old`. To only be told (a line in
+  `~/.ramat/daemon.log`), set `auto_update = false` in `config.toml`. `ramat update`
+  installs the latest version now; `ramat update --check` only says whether there is one.
 - **Viewer**: when it starts, it installs a new version before you use it and opens again. When a
   new version comes out while it is open, an **Update to …** button appears in the toolbar. The
   Machines view shows the agent version of each machine and marks the ones that are behind.
@@ -89,21 +89,21 @@ Older agents (before 0.10.0) do not update by themselves: run the install comman
 ## Uninstall
 
 ```sh
-shepherd service uninstall
-rm ~/.local/bin/shepherd
-claude plugin uninstall shepherd@shepherd
-rm -rf ~/Applications/Shepherd.app
+ramat service uninstall
+rm ~/.local/bin/ramat
+claude plugin uninstall ramat@ramat
+rm -rf ~/Applications/Ramat.app
 ```
 
-Your local data stays in `~/.shepherd` (and the viewer's login in
-`~/Library/Application Support/Shepherd Viewer`): delete those folders too to remove everything.
+Your local data stays in `~/.ramat` (and the viewer's login in
+`~/Library/Application Support/Ramat Viewer`): delete those folders too to remove everything.
 
 ## Configuration
 
-The agent reads `~/.shepherd/config.toml`. It is created with comments the first time the
+The agent reads `~/.ramat/config.toml`. It is created with comments the first time the
 service starts. Changes apply a few seconds after you save the file, with no restart. While the
 service runs, a file with an error is ignored and the last good configuration stays; the reason
-is in `~/.shepherd/daemon.log`. With an error at start, the service does not start, so a typo can
+is in `~/.ramat/daemon.log`. With an error at start, the service does not start, so a typo can
 never send more than you chose.
 
 ```toml
@@ -153,7 +153,7 @@ for the same folder in the file replaces it, data level included.
 | `full` | Everything below, plus prompts, tool input and output, Claude's answers and the transcript of the conversation (long texts are cut at 64 KB). |
 | `titles` | Everything below, plus the session name and the task of each subagent. |
 | `metadata` | Session state, tool names, times, folder, model and token counts. |
-| `none` | Nothing. The sessions stay on your machine: `shepherd status` still shows them. |
+| `none` | Nothing. The sessions stay on your machine: `ramat status` still shows them. |
 
 Environment variables are never sent, at any level: only a few that Claude Code sets itself
 (its version, the process id, CLI or desktop app).

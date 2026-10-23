@@ -1,5 +1,5 @@
 {
-  "description": "Sends Claude Code session events to the local Shepherd daemon. Needs the shepherd binary in the PATH.",
-  "name": "shepherd",
-  "version": "0.10.0"
+  "description": "Sends Claude Code session events to the local Ramat daemon. Needs the ramat binary in the PATH.",
+  "name": "ramat",
+  "version": "0.11.0"
 }

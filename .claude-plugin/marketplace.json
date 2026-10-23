@@ -1,12 +1,12 @@
 {
-  "name": "shepherd",
+  "name": "ramat",
   "owner": {
     "name": "Albert Horta"
   },
   "plugins": [
     {
-      "description": "Sends Claude Code session events to the local Shepherd daemon. Needs the shepherd binary in the PATH.",
-      "name": "shepherd",
+      "description": "Sends Claude Code session events to the local Ramat daemon. Needs the ramat binary in the PATH.",
+      "name": "ramat",
       "source": "./plugin"
     }
   ]

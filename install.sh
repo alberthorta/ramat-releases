@@ -1,14 +1,14 @@
 #!/bin/sh
-# Installs or updates a Shepherd component from the latest release: the agent on macOS or
+# Installs or updates a Ramat component from the latest release: the agent on macOS or
 # Linux, the viewer on macOS.
 #
-#   curl -fsSL https://raw.githubusercontent.com/alberthorta/shepherd-releases/main/install.sh | sh -s agent
-#   curl -fsSL https://raw.githubusercontent.com/alberthorta/shepherd-releases/main/install.sh | sh -s viewer
+#   curl -fsSL https://raw.githubusercontent.com/alberthorta/ramat-releases/main/install.sh | sh -s agent
+#   curl -fsSL https://raw.githubusercontent.com/alberthorta/ramat-releases/main/install.sh | sh -s viewer
 #
 # It reads manifest.json, downloads the file for this machine and checks its SHA-256.
 set -eu
 
-REPO=alberthorta/shepherd-releases
+REPO=alberthorta/ramat-releases
 MANIFEST="https://raw.githubusercontent.com/$REPO/main/manifest.json"
 
 comp=${1:-}
@@ -23,7 +23,7 @@ case "$(uname -s)" in
 Darwin) os=darwin ;;
 Linux) os=linux ;;
 *)
-	echo "Shepherd installs on macOS and Linux only for now." >&2
+	echo "Ramat installs on macOS and Linux only for now." >&2
 	exit 1
 	;;
 esac
@@ -92,18 +92,18 @@ case "$comp" in
 agent)
 	mkdir -p "$HOME/.local/bin"
 	tar xzf "$tmp/$name" -C "$tmp"
-	install -m 755 "$tmp/shepherd" "$HOME/.local/bin/shepherd"
-	"$HOME/.local/bin/shepherd" service install
-	echo "Installed shepherd $version in ~/.local/bin."
+	install -m 755 "$tmp/ramat" "$HOME/.local/bin/ramat"
+	"$HOME/.local/bin/ramat" service install
+	echo "Installed ramat $version in ~/.local/bin."
 	case ":$PATH:" in
 	*":$HOME/.local/bin:"*) ;;
-	*) echo "Add ~/.local/bin to your PATH: Claude Code hooks call 'shepherd'." ;;
+	*) echo "Add ~/.local/bin to your PATH: Claude Code hooks call 'ramat'." ;;
 	esac
 	;;
 viewer)
 	mkdir -p "$HOME/Applications"
-	rm -rf "$HOME/Applications/Shepherd.app"
+	rm -rf "$HOME/Applications/Ramat.app"
 	ditto -x -k "$tmp/$name" "$HOME/Applications"
-	echo "Installed Shepherd.app $version in ~/Applications."
+	echo "Installed Ramat.app $version in ~/Applications."
 	;;
 esac

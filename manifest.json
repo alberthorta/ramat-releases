@@ -1,41 +1,41 @@
 {
-  "updated": "2026-10-23T10:12:33Z",
+  "updated": "2026-10-23T10:43:35Z",
   "components": {
     "agent": {
-      "version": "0.10.0",
-      "released": "2026-10-23T10:12:16Z",
+      "version": "0.11.0",
+      "released": "2026-10-23T10:43:35Z",
       "assets": [
         {
-          "name": "shepherd_0.10.0_darwin_arm64.tar.gz",
+          "name": "ramat_0.11.0_darwin_arm64.tar.gz",
           "os": "darwin",
           "arch": "arm64",
-          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/agent-v0.10.0/shepherd_0.10.0_darwin_arm64.tar.gz",
-          "sha256": "ea01f7bb48309e599f6640806f1ddb16b3504ec215649992a893ce8325985ace",
-          "size": 7104615
+          "url": "https://github.com/alberthorta/ramat-releases/releases/download/agent-v0.11.0/ramat_0.11.0_darwin_arm64.tar.gz",
+          "sha256": "9859dfdf7d7f6583573420b66ed64e51c5f97de9f451cab4ce812bacce84104f",
+          "size": 7104200
         },
         {
-          "name": "shepherd_0.10.0_darwin_amd64.tar.gz",
+          "name": "ramat_0.11.0_darwin_amd64.tar.gz",
           "os": "darwin",
           "arch": "amd64",
-          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/agent-v0.10.0/shepherd_0.10.0_darwin_amd64.tar.gz",
-          "sha256": "29dc39d28e400852607a1188aee6249fdc79612d9e852e287e6510d819bb025d",
-          "size": 7525185
+          "url": "https://github.com/alberthorta/ramat-releases/releases/download/agent-v0.11.0/ramat_0.11.0_darwin_amd64.tar.gz",
+          "sha256": "2ca6f265410153f45ae89d10d6c2e452702cb8d942f5f352423a9a6e599d64e9",
+          "size": 7524524
         },
         {
-          "name": "shepherd_0.10.0_linux_amd64.tar.gz",
+          "name": "ramat_0.11.0_linux_amd64.tar.gz",
           "os": "linux",
           "arch": "amd64",
-          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/agent-v0.10.0/shepherd_0.10.0_linux_amd64.tar.gz",
-          "sha256": "269f5b612d5372d71f728efc0454a0184154fc41a0b48fd019af9df92d565d82",
-          "size": 7486231
+          "url": "https://github.com/alberthorta/ramat-releases/releases/download/agent-v0.11.0/ramat_0.11.0_linux_amd64.tar.gz",
+          "sha256": "00d838b9732f5d673da46c577f13cce4ca8b9d5d2211efc5d7d2693ca1c7ddc5",
+          "size": 7485955
         },
         {
-          "name": "shepherd_0.10.0_linux_arm64.tar.gz",
+          "name": "ramat_0.11.0_linux_arm64.tar.gz",
           "os": "linux",
           "arch": "arm64",
-          "url": "https://github.com/alberthorta/shepherd-releases/releases/download/agent-v0.10.0/shepherd_0.10.0_linux_arm64.tar.gz",
-          "sha256": "e52f76df546aef73b0ca2a83a930b3a184907fc10b316ed827061aebef57e873",
-          "size": 6915328
+          "url": "https://github.com/alberthorta/ramat-releases/releases/download/agent-v0.11.0/ramat_0.11.0_linux_arm64.tar.gz",
+          "sha256": "b89807b8e4d552e59d0e2951672436a9104d46bfdebd75c9ba02b79af77609ff",
+          "size": 6915460
         }
       ]
     },
