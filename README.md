@@ -101,6 +101,9 @@ default_family = "personal"
 # Data level of that family: full, titles, metadata or none.
 default_data = "full"
 
+# A session that waits for you longer than this shows as idle.
+idle_after = "15m"
+
 # Local queue while the server cannot be reached.
 queue_max_days = 7
 queue_max_mb = 200
@@ -116,6 +119,7 @@ data = "metadata"
 |:--|:--|:--|
 | `default_family` | `default` | Family of the sessions started outside every `[[family]]` folder. |
 | `default_data` | `full` | Data level of the default family. |
+| `idle_after` | `15m` | A session waiting for you longer than this shows as **idle** instead of **waiting for you**: same meaning (your turn), it only goes lower in the list. A duration of at least `1m`, like `45m` or `2h`. |
 | `queue_max_days` | `7` | Events wait in a local queue while the server is not reachable. Older events are dropped. |
 | `queue_max_mb` | `200` | Size limit of that queue. When it is bigger, the oldest events are dropped. |
 | `[[family]]` `folder` | | Sessions started in this folder or below it belong to the family. `~` is your home folder. The most specific folder wins. |
