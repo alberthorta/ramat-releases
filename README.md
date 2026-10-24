@@ -77,17 +77,23 @@ not detected as a running session; the native installer is.
 
 ## Install the viewer
 
+Download it from [ramat.app/download/mac](https://ramat.app/download/mac) (the
+`Ramat_<version>_darwin_arm64.dmg` of the latest `viewer` release), open the disk image and
+drag Ramat to Applications. A Mac with Apple silicon and macOS 15 or later.
+
+A browser download is marked as coming from the internet and the app is not notarized, so the
+first time macOS stops it: open System Settings › Privacy & Security and choose
+**Open Anyway**. After that it updates itself.
+
+Or from the terminal, with no Gatekeeper step (curl downloads are not marked):
+
 ```sh
 curl -fsSL https://raw.githubusercontent.com/alberthorta/ramat-releases/main/install.sh | sh -s viewer
 ```
 
-It installs Ramat.app in `~/Applications`. Open it and press
+Both put Ramat.app in `/Applications`. Open it and press
 **Log In with the Browser**: a browser page opens, log in and authorize the viewer, like for a
 machine. The key of the viewer is kept in the Secure Enclave of your Mac.
-
-You can also download `Ramat_<version>_darwin_arm64.zip` from the latest `viewer` release
-and unzip it. A browser download is marked as coming from the internet and the app is not
-notarized, so the first time macOS blocks it: right click the app, then **Open**.
 
 ### Answer from the viewer
 
@@ -133,7 +139,7 @@ Older agents (before 0.10.0) do not update by themselves: run the install comman
 ramat service uninstall
 rm ~/.local/bin/ramat
 claude plugin uninstall ramat@ramat
-rm -rf ~/Applications/Ramat.app
+rm -rf /Applications/Ramat.app
 ```
 
 On Windows, in PowerShell: `ramat service uninstall`, then delete

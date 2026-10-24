@@ -101,9 +101,9 @@ agent)
 	esac
 	;;
 viewer)
-	mkdir -p "$HOME/Applications"
-	rm -rf "$HOME/Applications/Ramat.app"
-	ditto -x -k "$tmp/$name" "$HOME/Applications"
-	echo "Installed Ramat.app $version in ~/Applications."
+	# /Applications, like the app downloaded from the web: one copy, which updates itself there.
+	rm -rf "/Applications/Ramat.app"
+	ditto -x -k "$tmp/$name" "/Applications"
+	echo "Installed Ramat.app $version in /Applications."
 	;;
 esac
