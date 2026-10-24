@@ -6,7 +6,8 @@ the compiled builds. The source code is private.
 
 There are two parts to install:
 
-- **Agent** (`ramat`): runs on each machine where you use Claude Code (macOS or Linux). It
+- **Agent** (`ramat`): runs on each machine where you use Claude Code (macOS, Linux, and
+  Windows as an experiment). It
   gets the session events from a Claude Code plugin and sends them to the Ramat server.
 - **Viewer** (Ramat.app): a macOS app that shows the sessions of all your machines, live.
 
@@ -14,7 +15,8 @@ Both need an account on the Ramat server, `https://api.ramat.app`. Accounts are 
 only: you get an invite link, open it and create your account.
 
 Requirements: Claude Code on a Mac (Apple silicon or Intel) or on Linux (x86-64 or ARM64, with
-systemd) for the agent, and macOS 15 or later for the viewer. Windows is not supported yet.
+systemd) for the agent, and macOS 15 or later for the viewer. Windows 10 or later works only as
+an experiment: see [Windows (experimental)](#windows-experimental).
 
 ## Install the agent
 
@@ -54,6 +56,24 @@ Sessions you start from now on appear in Ramat. Sessions that were already open 
 plugin was installed show as "untracked" until you start them again.
 
 To check that it works: `ramat status` lists the sessions of this machine.
+
+## Windows (experimental)
+
+The Windows agent has run only in automated tests so far, never on a real machine with Claude
+Code. Expect problems. To try it, run this in PowerShell (as yourself, not as administrator):
+
+```powershell
+irm https://raw.githubusercontent.com/alberthorta/ramat-releases/main/install.ps1 | iex
+```
+
+It checks the SHA-256 of the download, copies `ramat.exe` to `%USERPROFILE%\.local\bin` (the
+folder where Claude Code installs itself), adds that folder to your `PATH` if needed, and starts
+the agent as a scheduled task of your user ("Ramat agent"): at login, and again within a minute
+if it stops. Then install the plugin and log in as on the other systems.
+
+Not there yet on Windows: the project folder of "untracked" sessions, and closing a session
+from the viewer ends the process at once, with no clean exit. Claude Code installed with npm is
+not detected as a running session; the native installer is.
 
 ## Install the viewer
 
@@ -98,7 +118,7 @@ Before installing anything, they download `manifest.json`, check its signature w
 below and check the SHA-256 of the file. They never install an older version.
 
 - **Agent**: installs the new version, updates the Claude Code plugin and restarts the service.
-  The previous binary stays as `~/.local/bin/ramat.old`. To only be told (a line in
+  The previous binary stays as `~/.local/bin/ramat.old` (`ramat.exe.old` on Windows). To only be told (a line in
   `~/.ramat/daemon.log`), set `auto_update = false` in `config.toml`. `ramat update`
   installs the latest version now; `ramat update --check` only says whether there is one.
 - **Viewer**: when it starts, it installs a new version before you use it and opens again. When a
@@ -115,6 +135,9 @@ rm ~/.local/bin/ramat
 claude plugin uninstall ramat@ramat
 rm -rf ~/Applications/Ramat.app
 ```
+
+On Windows, in PowerShell: `ramat service uninstall`, then delete
+`%USERPROFILE%\.local\bin\ramat.exe` and uninstall the plugin the same way.
 
 Your local data stays in `~/.ramat` (and the viewer's login in
 `~/Library/Application Support/Ramat Viewer`): delete those folders too to remove everything.

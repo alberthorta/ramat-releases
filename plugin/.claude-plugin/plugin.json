@@ -1,5 +1,5 @@
 {
   "description": "Sends Claude Code session events to the local Ramat daemon. Needs the ramat binary in the PATH.",
   "name": "ramat",
-  "version": "0.16.0"
+  "version": "0.17.0"
 }
