@@ -11,7 +11,7 @@ There are two parts to install:
   gets the session events from a Claude Code plugin and sends them to the Ramat server.
 - **Viewer** (Ramat.app): a macOS app that shows the sessions of all your machines, live.
 
-Both need an account on the Ramat server, `https://api.ramat.app`. Accounts are by invitation
+Both need an account on the Ramat server, `https://ramat.app`. Accounts are by invitation
 only: you get an invite link, open it and create your account.
 
 Requirements: Claude Code on a Mac (Apple silicon or Intel) or on Linux (x86-64 or ARM64, with
