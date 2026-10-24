@@ -99,7 +99,7 @@ machine. The key of the viewer is kept in the Secure Enclave of your Mac.
 
 When a session asks for a permission or asks you a question, the viewer shows it at the top of
 the session's details, with **Allow** / **Deny** or the question's options. The terminal shows
-the same prompt at the same time: the first answer wins. It works for fields at the `full`
+the same prompt at the same time: the first answer wins. It works for families at the `full`
 data level (or encrypted, with your key unlocked in the viewer), with agent 0.15.0 or later,
 in sessions started after the agent's plugin updated.
 
@@ -157,10 +157,10 @@ is in `~/.ramat/daemon.log`. With an error at start, the service does not start,
 never send more than you chose.
 
 ```toml
-# Field of the sessions that match no folder rule.
-default_field = "personal"
+# Family of the sessions that match no folder rule.
+default_family = "personal"
 
-# Data level of that field: full, titles, metadata or none.
+# Data level of that family: full, titles, metadata or none.
 default_data = "full"
 
 # A session that waits for you longer than this shows as idle.
@@ -171,37 +171,45 @@ queue_max_days = 7
 queue_max_mb = 200
 
 # One block per folder rule.
-[[field]]
+[[family]]
 folder = "~/work"
-field = "work"
+family = "work"
 data = "metadata"
+
+# The animal of each family on the farm (not drawn by the viewer yet).
+default_species = "sheep"
+[species]
+work = "cow"
 ```
 
 | Option | Default | What it does |
 |:--|:--|:--|
-| `default_field` | `default` | Field of the sessions started outside every `[[field]]` folder. |
-| `default_data` | `full` | Data level of the default field. |
+| `default_family` | `default` | Family of the sessions started outside every `[[family]]` folder. |
+| `default_data` | `full` | Data level of the default family. |
 | `auto_update` | `true` | Install new versions of the agent by itself. `false`: only write in the log that one is available. |
 | `idle_after` | `15m` | A session waiting for you longer than this shows as **idle** instead of **waiting for you**: same meaning (your turn), it only goes lower in the list. A duration of at least `1m`, like `45m` or `2h`. |
 | `queue_max_days` | `7` | Events wait in a local queue while the server is not reachable. Older events are dropped. |
 | `queue_max_mb` | `200` | Size limit of that queue. When it is bigger, the oldest events are dropped. |
-| `[[field]]` `folder` | | Sessions started in this folder or below it belong to the field. `~` is your home folder. The most specific folder wins. |
-| `[[field]]` `field` | | Name of the field: a label to group and filter sessions in the viewer. |
-| `[[field]]` `data` | `full` | Data level of the field. When several rules of one field set it, the stricter level wins. |
-| `[[field]]` `encrypt` | `false` | Encrypt the field's content end to end: transcript and hook payloads (prompts, tool input and output, answers). Only your viewer can read it; the server cannot search it. |
-| `[[field]]` `encrypt_titles` | `false` | Encrypt the session names and the subagent tasks too. Without it they stay readable on the server. |
-| `default_encrypt`, `default_encrypt_titles` | `false` | The same, for the default field. |
-| `[[field]]` `control` | `true` | Let your viewer act on these sessions: close one, allow or deny a permission, answer a question. Commands are signed with your key; the server cannot make them. |
-| `default_control` | `true` | The same, for the default field. |
+| `[[family]]` `folder` | | Sessions started in this folder or below it belong to the family. `~` is your home folder. The most specific folder wins. |
+| `[[family]]` `family` | | Name of the family: a label to group and filter sessions in the viewer. |
+| `[[family]]` `data` | `full` | Data level of the family. When several rules of one family set it, the stricter level wins. |
+| `[[family]]` `encrypt` | `false` | Encrypt the family's content end to end: transcript and hook payloads (prompts, tool input and output, answers). Only your viewer can read it; the server cannot search it. |
+| `[[family]]` `encrypt_titles` | `false` | Encrypt the session names and the subagent tasks too. Without it they stay readable on the server. |
+| `default_encrypt`, `default_encrypt_titles` | `false` | The same, for the default family. |
+| `[[family]]` `control` | `true` | Let your viewer act on these sessions: close one, allow or deny a permission, answer a question. Commands are signed with your key; the server cannot make them. |
+| `default_control` | `true` | The same, for the default family. |
+| `default_species` | `sheep` | The animal of the families with none in `[species]`. A lowercase word. |
+| `[species]` | | One line per family, `family = "animal"`, like `work = "cow"`. Sent with each session; the viewer does not draw other animals yet. |
 
-A field groups sessions by folder: personal, work, a client. It was called a **family**
-before, and the old names still work: `default_family`, `[[family]]` and `family = "..."`.
+A family groups sessions by folder: personal, work, a client. Agents 0.14 to 0.17 also took
+the word **field** (`default_field`, `[[field]]`, `field = "..."`); since 0.18.0 the agent
+refuses it and says what to rename, so check your file if you used it.
 
-A session keeps the field it had when it started, even if you change the rules later. A new
+A session keeps the family it had when it started, even if you change the rules later. A new
 data level applies at once, also to events that were not sent yet.
 
 Built-in rule: sessions in `~/.claude-mem` (helper sessions of the claude-mem plugin) belong to
-the field `claude-mem` with data level `none`, so nothing of them leaves your machine. A rule
+the family `claude-mem` with data level `none`, so nothing of them leaves your machine. A rule
 for the same folder in the file replaces it, data level included.
 
 ### Data levels: what leaves your machine
@@ -218,7 +226,7 @@ Environment variables are never sent, at any level: only a few that Claude Code 
 
 ### End-to-end encryption
 
-A field with `encrypt = true` sends its content sealed with your key: only your viewer can
+A family with `encrypt = true` sends its content sealed with your key: only your viewer can
 read it, the server stores it but cannot read or search it. State, tools, times, model and
 token counts are never encrypted, so the session list works the same.
 
@@ -227,9 +235,9 @@ token counts are never encrypted, so the session list works the same.
    recovery key, encrypted data cannot be read by anyone.
 2. Each agent pins your key the next time it connects. Check that `ramat key` shows the same
    fingerprint as the viewer.
-3. Turn on `encrypt` (and, if you want, `encrypt_titles`) for the fields you choose.
+3. Turn on `encrypt` (and, if you want, `encrypt_titles`) for the families you choose.
 
-Until an agent has your key, an encrypted field sends no content at all, and that content is
+Until an agent has your key, an encrypted family sends no content at all, and that content is
 not sent later: create the key before turning `encrypt` on. On another Mac, the viewer unlocks
 the key with your passphrase (or the recovery key).
 
