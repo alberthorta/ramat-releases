@@ -69,7 +69,9 @@ curl -fsSL https://raw.githubusercontent.com/alberthorta/ramat-releases/main/ins
 It downloads the build for your machine, checks its SHA-256 against the manifest, copies
 `ramat` to `~/.local/bin` and starts it as a background service: a launchd agent on macOS
 (it also starts at login), a systemd user service on Linux (`systemctl --user status ramat`).
-`~/.local/bin` must be in your `PATH`, because the Claude Code hooks call `ramat`.
+`~/.local/bin` must be in your `PATH`, because the Claude Code hooks call `ramat`: if it is
+not, the installer adds it to your shell's start file (`~/.zshrc`, `~/.bash_profile` on macOS,
+`~/.bashrc` on Linux, fish's `conf.d`, or `~/.profile`). Open a new terminal to use `ramat`.
 
 On a Linux server, turn on linger so the service keeps running when you log out:
 `loginctl enable-linger`. The install script tells you when it is off.

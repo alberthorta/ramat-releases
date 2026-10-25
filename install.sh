@@ -88,6 +88,31 @@ if ! echo "$sum  $tmp/$name" | $check >/dev/null 2>&1; then
 	exit 1
 fi
 
+# Puts ~/.local/bin in the PATH of new terminals, once: one line in the start file of the
+# user's shell. Claude Code hooks call 'ramat', and so do people.
+add_to_path() {
+	case ":$PATH:" in
+	*":$HOME/.local/bin:"*) return ;;
+	esac
+	line='export PATH="$HOME/.local/bin:$PATH"'
+	case "$(basename "${SHELL:-sh}")" in
+	zsh) rc="${ZDOTDIR:-$HOME}/.zshrc" ;;
+	bash) if [ "$os" = darwin ]; then rc="$HOME/.bash_profile"; else rc="$HOME/.bashrc"; fi ;;
+	fish)
+		rc="$HOME/.config/fish/conf.d/ramat.fish"
+		line='fish_add_path -g "$HOME/.local/bin"'
+		mkdir -p "$(dirname "$rc")"
+		;;
+	*) rc="$HOME/.profile" ;;
+	esac
+	if [ -f "$rc" ] && grep -qs '\.local/bin' "$rc"; then
+		echo "~/.local/bin is in $rc already: open a new terminal to use 'ramat'."
+		return
+	fi
+	printf '\n# Ramat\n%s\n' "$line" >>"$rc"
+	echo "Added ~/.local/bin to your PATH in $rc. Open a new terminal to use 'ramat'."
+}
+
 case "$comp" in
 agent)
 	mkdir -p "$HOME/.local/bin"
@@ -95,10 +120,7 @@ agent)
 	install -m 755 "$tmp/ramat" "$HOME/.local/bin/ramat"
 	"$HOME/.local/bin/ramat" service install
 	echo "Installed ramat $version in ~/.local/bin."
-	case ":$PATH:" in
-	*":$HOME/.local/bin:"*) ;;
-	*) echo "Add ~/.local/bin to your PATH: Claude Code hooks call 'ramat'." ;;
-	esac
+	add_to_path
 	;;
 viewer)
 	# /Applications, like the app downloaded from the web: one copy, which updates itself there.
