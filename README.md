@@ -199,7 +199,7 @@ work = "cow"
 | `[[family]]` `control` | `true` | Let your viewer act on these sessions: close one, allow or deny a permission, answer a question. Commands are signed with your key; the server cannot make them. |
 | `default_control` | `true` | The same, for the default family. |
 | `default_species` | `sheep` | The animal of the families with none in `[species]`. A lowercase word. |
-| `[species]` | | One line per family, `family = "animal"`, like `work = "cow"`. Sent with each session; the viewer does not draw other animals yet. |
+| `[species]` | | One line per family, `family = "animal"`, like `work = "cow"`. Sent with each session. The viewer and the web draw sheep, cow, horse, pig, chicken, goat, turkey and rabbit; any other word is a sheep. |
 
 A family groups sessions by folder: personal, work, a client. Agents 0.14 to 0.17 also took
 the word **field** (`default_field`, `[[field]]`, `field = "..."`); since 0.18.0 the agent
