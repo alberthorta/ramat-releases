@@ -4,19 +4,59 @@ Ramat shows the state of your Claude Code sessions, from several machines, in on
 which session is working, which one waits for you, which one needs a permission. This repo has
 the compiled builds. The source code is private.
 
-There are two parts to install:
+Ramat has three parts:
 
 - **Agent** (`ramat`): runs on each machine where you use Claude Code (macOS, Linux, and
-  Windows as an experiment). It
-  gets the session events from a Claude Code plugin and sends them to the Ramat server.
-- **Viewer** (Ramat.app): a macOS app that shows the sessions of all your machines, live.
+  Windows as an experiment). It gets the session events from a Claude Code plugin and sends
+  them to the Ramat server.
+- **Viewer** (Ramat.app): a macOS app that shows the sessions of all your machines, live. It is
+  also where you read encrypted content and act on sessions.
+- **Server and web** (`https://ramat.app`): run for you. On the web you manage your account,
+  your machines and the animals of your families. The web does not show sessions.
 
-Both need an account on the Ramat server, `https://ramat.app`. Accounts are by invitation
-only: you get an invite link, open it and create your account.
+You need an account on `https://ramat.app`. Accounts are by invitation only: you get an invite
+link, open it and create your account.
 
-Requirements: Claude Code on a Mac (Apple silicon or Intel) or on Linux (x86-64 or ARM64, with
-systemd) for the agent, and macOS 15 or later for the viewer. Windows 10 or later works only as
-an experiment: see [Windows (experimental)](#windows-experimental).
+## Requirements
+
+| Part | Needs |
+|:--|:--|
+| Agent | Claude Code on a Mac (Apple silicon or Intel), on Linux (x86-64 or ARM64, with systemd), or on Windows 10 or later ([experimental](#windows-experimental)). |
+| Viewer | A Mac with Apple silicon and macOS 15 or later. |
+
+## Getting started
+
+Do these steps in this order. Encryption is on by default, and an agent with no key sends no
+content, so create your key before you install the agents.
+
+1. Create your account with the invite link.
+2. [Install the viewer](#install-the-viewer) and log in.
+3. In the viewer, open **Encryption** in the toolbar and create your key (see
+   [End-to-end encryption](#end-to-end-encryption)). Save the recovery key in your password
+   manager.
+4. [Install the agent](#install-the-agent) on each machine with Claude Code, install the plugin
+   and run `ramat login`.
+5. On each machine, check that `ramat key` shows the same fingerprint as the viewer.
+
+## Install the viewer
+
+Download it from [ramat.app/download/mac](https://ramat.app/download/mac) (the
+`Ramat_<version>_darwin_arm64.dmg` of the latest `viewer` release), open the disk image and
+drag Ramat to Applications.
+
+A browser download is marked as coming from the internet and the app is not notarized, so the
+first time macOS stops it: open System Settings › Privacy & Security and choose
+**Open Anyway**. After that it updates itself.
+
+Or from the terminal, with no Gatekeeper step (curl downloads are not marked):
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/alberthorta/ramat-releases/main/install.sh | sh -s viewer
+```
+
+Both put Ramat.app in `/Applications`. Open it and press **Log In with the Browser**: a browser
+page opens, log in and authorize the viewer, like for a machine. The login key of the viewer is
+kept in the Secure Enclave of your Mac.
 
 ## Install the agent
 
@@ -49,15 +89,15 @@ ramat login
 
 A browser page opens: log in and press **Authorize**. Check that the page shows the same code
 as the terminal. On a machine with no browser (a server over SSH), use
-`ramat login --no-browser`: it prints the address and the code,
-and you approve it from the browser of any other computer.
+`ramat login --no-browser`: it prints the address and the code, and you approve it from the
+browser of any other computer.
 
 Sessions you start from now on appear in Ramat. Sessions that were already open before the
 plugin was installed show as "untracked" until you start them again.
 
 To check that it works: `ramat status` lists the sessions of this machine.
 
-## Windows (experimental)
+### Windows (experimental)
 
 The Windows agent has run only in automated tests so far, never on a real machine with Claude
 Code. Expect problems. To try it, run this in PowerShell (as yourself, not as administrator):
@@ -75,61 +115,198 @@ Not there yet on Windows: the project folder of "untracked" sessions, and closin
 from the viewer ends the process at once, with no clean exit. Claude Code installed with npm is
 not detected as a running session; the native installer is.
 
-## Install the viewer
+### Agent commands
 
-Download it from [ramat.app/download/mac](https://ramat.app/download/mac) (the
-`Ramat_<version>_darwin_arm64.dmg` of the latest `viewer` release), open the disk image and
-drag Ramat to Applications. A Mac with Apple silicon and macOS 15 or later.
+| Command | What it does |
+|:--|:--|
+| `ramat login [--no-browser]` | Link this machine to your account. |
+| `ramat status [-a]` | Show the sessions of this machine. |
+| `ramat key [--reset]` | Show the keys this machine pinned for encryption and for commands. `--reset` forgets them, so the agent takes the next key the server sends. |
+| `ramat update [--check]` | Install the latest version now, or only say whether there is one. |
+| `ramat service install` / `uninstall` | Start or remove the background service. |
+| `ramat version` | Print the version. |
 
-A browser download is marked as coming from the internet and the app is not notarized, so the
-first time macOS stops it: open System Settings › Privacy & Security and choose
-**Open Anyway**. After that it updates itself.
+The service writes its log to `~/.ramat/daemon.log`.
 
-Or from the terminal, with no Gatekeeper step (curl downloads are not marked):
+## Using the viewer
 
-```sh
-curl -fsSL https://raw.githubusercontent.com/alberthorta/ramat-releases/main/install.sh | sh -s viewer
+- **Overview**: a summary of your sessions, one card per machine.
+- **Herd**: every open session, grouped by what it needs from you (waiting for you, working,
+  asleep). Click a session to see its details and its transcript on the right.
+- **History**: sessions that ended.
+- **Farms**: your machines, with their agent version (machines that are behind are marked).
+  You can rename a machine or revoke it. Under it, **Animals**: the animal of each family.
+
+You can also act on sessions from the viewer. This needs your key unlocked in the viewer, and
+the family must allow it (`control`, on by default, see [Configuration](#configuration)).
+Commands are signed with your key: the server cannot make them.
+
+- **Answer prompts**: when a session asks for a permission or asks you a question, its details
+  show **Allow** / **Deny** or the question's options. The terminal shows the same prompt at the
+  same time: the first answer wins. It needs the `full` data level and agent 0.15.0 or later,
+  in sessions started after the plugin updated.
+- **Close a session** (**Close…** in its details): ends the Claude Code process on its machine.
+- **Send a message**: types a message into the session, as if you typed it in its terminal.
+  Claude Code only takes messages from other apps through a *channel*, still a research
+  preview, so start the session with Ramat's channel and accept the warning Claude Code shows:
+
+  ```sh
+  claude --dangerously-load-development-channels plugin:ramat@ramat
+  ```
+
+  An alias makes it the default:
+  `alias claude='claude --dangerously-load-development-channels plugin:ramat@ramat'`. Such
+  sessions show a message box in the viewer. It needs agent 0.16.0 or later.
+
+## Configuration
+
+The agent reads `~/.ramat/config.toml`. It is created with comments the first time the
+service starts. Changes apply a few seconds after you save the file, with no restart. While the
+service runs, a file with an error is ignored and the last good configuration stays; the reason
+is in `~/.ramat/daemon.log`. With an error at start, the service does not start, so a typo can
+never send more than you chose.
+
+A **family** groups sessions by folder: personal, work, a client. Each `[[family]]` block is a
+folder rule. Sessions started in that folder or below it belong to its family; the most
+specific folder wins. Sessions that match no rule belong to `default_family`.
+
+Each family has four options: `data`, `encrypt`, `encrypt_titles` and `control`. A rule can set
+them. When the rules of a family leave an option out, it comes from the matching `default_*`
+option (`default_data`, `default_encrypt`, ...). This is true for every family, the default
+family included. When several rules of one family set the same option, the safer value wins:
+the stricter data level, encryption on, control off. So a second folder added later cannot open
+up the first by mistake.
+
+`default_family` is not one of these: it is only the name of the family for sessions that match
+no rule.
+
+```toml
+# Family of the sessions that match no folder rule.
+default_family = "personal"
+
+# For every family that does not set its own (these are the defaults).
+default_data = "full"
+default_encrypt = true
+default_encrypt_titles = true
+default_control = true
+
+# A session that waits for you longer than this shows as idle.
+idle_after = "15m"
+
+# One block per folder rule.
+[[family]]
+folder = "~/work"
+family = "work"
+data = "metadata"
+control = false
+
+[[family]]
+folder = "~/notes"
+family = "notes"
+encrypt = false          # sent in clear, so the server can search it
+encrypt_titles = false
 ```
 
-Both put Ramat.app in `/Applications`. Open it and press
-**Log In with the Browser**: a browser page opens, log in and authorize the viewer, like for a
-machine. The key of the viewer is kept in the Secure Enclave of your Mac.
+### Options
 
-### Answer from the viewer
+| Option | Default | What it does |
+|:--|:--|:--|
+| `default_family` | `default` | Family of the sessions started outside every `[[family]]` folder. |
+| `default_data` | `full` | Data level of every family whose rules do not set `data`. |
+| `default_encrypt` | `true` | Encryption of the content of every family whose rules do not set `encrypt`. |
+| `default_encrypt_titles` | `true` | Encryption of the names of every family whose rules do not set `encrypt_titles`. |
+| `default_control` | `true` | Viewer commands for every family whose rules do not set `control`. |
+| `auto_update` | `true` | Install new versions of the agent by itself. `false`: only write in the log that one is available. |
+| `idle_after` | `15m` | A session waiting for you longer than this shows as **idle** instead of **waiting for you**: same meaning (your turn), it only goes lower in the list. A duration of at least `1m`, like `45m` or `2h`. |
+| `queue_max_days` | `7` | Events wait in a local queue while the server is not reachable. Older events are dropped. |
+| `queue_max_mb` | `200` | Size limit of that queue. When it is bigger, the oldest events are dropped. |
+| `[[family]]` `folder` | | Sessions started in this folder or below it belong to the family. `~` is your home folder. |
+| `[[family]]` `family` | | Name of the family: a label to group and filter sessions in the viewer. |
+| `[[family]]` `data` | `default_data` | Data level of the family (see below). |
+| `[[family]]` `encrypt` | `default_encrypt` | Encrypt the family's content end to end: transcript and hook payloads (prompts, tool input and output, answers). Only your viewer can read it; the server cannot search it. |
+| `[[family]]` `encrypt_titles` | `default_encrypt_titles` | Encrypt the session names and the subagent tasks. When off, they stay readable on the server. |
+| `[[family]]` `control` | `default_control` | Let your viewer act on these sessions: answer a prompt, close a session, send a message. |
 
-When a session asks for a permission or asks you a question, the viewer shows it at the top of
-the session's details, with **Allow** / **Deny** or the question's options. The terminal shows
-the same prompt at the same time: the first answer wins. It works for families at the `full`
-data level (or encrypted, with your key unlocked in the viewer), with agent 0.15.0 or later,
-in sessions started after the agent's plugin updated.
+A session keeps the family it had when it started, even if you change the rules later. A new
+data level applies at once, also to events that were not sent yet.
 
-### Send messages from the viewer
+Built-in rule: sessions in `~/.claude-mem` (helper sessions of the claude-mem plugin) belong to
+the family `claude-mem` with data level `none`, so nothing of them leaves your machine. A rule
+for the same folder in the file replaces it, data level included.
 
-The viewer can send a message to a session, as if you typed it in its terminal. Claude Code
-only takes messages from other apps through a *channel*, still a research preview, so start the
-session with Ramat's channel and accept the warning Claude Code shows:
+Each family is drawn as an animal (sheep, cow, horse, pig, chicken, goat, turkey or rabbit):
+pick it on the **Animals** page of the viewer or of the web, not in this file.
 
-```sh
-claude --dangerously-load-development-channels plugin:ramat@ramat
-```
+### Old configuration files
 
-An alias makes it the default: `alias claude='claude --dangerously-load-development-channels plugin:ramat@ramat'`.
-Such sessions show a message box in the viewer. It needs agent 0.16.0 or later.
+- **Before agent 0.20.0**, the `default_*` options only applied to the default family, and
+  encryption was off unless you turned it on. Now they apply to every family and encryption is
+  on. If a family must stay in clear, add `encrypt = false` to its rule.
+- Agents 0.18 took `default_species` and `[species]`. They do nothing now: the agent writes a
+  line in the log, and you can delete them.
+- Agents 0.14 to 0.17 took the word **field** (`default_field`, `[[field]]`, `field = "..."`).
+  Since 0.18.0 the agent refuses it and says what to rename.
+
+### Data levels: what leaves your machine
+
+| Level | What is sent to the server |
+|:--|:--|
+| `full` | Everything below, plus prompts, tool input and output, Claude's answers and the transcript of the conversation (long texts are cut at 64 KB). |
+| `titles` | Everything below, plus the session name and the task of each subagent. |
+| `metadata` | Session state, tool names, times, folder, model and token counts. |
+| `none` | Nothing. The sessions stay on your machine: `ramat status` still shows them. |
+
+Environment variables are never sent, at any level: only a few that Claude Code sets itself
+(its version, the process id, CLI or desktop app).
+
+## End-to-end encryption
+
+Encryption is on by default for every family. An encrypted family sends its content sealed
+with your key: only your viewer can read it. The server stores it but cannot read or search it.
+With `encrypt_titles` (also on by default), the session names and the subagent tasks are sealed
+too. State, tools, times, model and token counts are never encrypted, so the session list works
+the same.
+
+Encryption does not send more than the data level allows: a family at `metadata` sends no
+content, encrypted or not.
+
+How to set it up:
+
+1. In the viewer, open **Encryption** in the toolbar and create your key with a passphrase.
+   Save the **recovery key** it shows in your password manager. Without the passphrase and the
+   recovery key, nobody can read the encrypted data, not even you.
+2. Each agent pins your key the next time it connects. Check that `ramat key` shows the same
+   fingerprint as the viewer.
+3. On another Mac, the viewer unlocks the key with your passphrase (or the recovery key). The
+   server keeps a copy of your key that only your passphrase opens.
+
+Things to know:
+
+- **Until an agent has your key, an encrypted family sends no content and no names**, and that
+  content is not sent later. So create the key before you install the agents.
+- **If the server ever sends a different key**, the agent does not use it: encrypted families
+  send no content and commands from the viewer are refused, until you run `ramat key --reset`.
+  Only do that if you made a new key on purpose.
+- **Turning encryption on does not encrypt what was sent before.** Older content stays in clear
+  on the server.
+- The same key signs the commands of the viewer (answers, close, messages), so they also need
+  the key unlocked in the viewer.
 
 ## Updates
 
-Both parts update by themselves. The Ramat server checks this repo every 15 minutes and tells
-the connected agents and viewers when there is a new version; they also check when they start.
-Before installing anything, they download `manifest.json`, check its signature with the key
-below and check the SHA-256 of the file. They never install an older version.
+Both the agent and the viewer update by themselves. The Ramat server checks this repo every
+15 minutes and tells the connected agents and viewers when there is a new version; they also
+check when they start. Before installing anything, they download `manifest.json`, check its
+signature with the key below and check the SHA-256 of the file. They never install an older
+version.
 
 - **Agent**: installs the new version, updates the Claude Code plugin and restarts the service.
-  The previous binary stays as `~/.local/bin/ramat.old` (`ramat.exe.old` on Windows). To only be told (a line in
-  `~/.ramat/daemon.log`), set `auto_update = false` in `config.toml`. `ramat update`
-  installs the latest version now; `ramat update --check` only says whether there is one.
+  The previous binary stays as `~/.local/bin/ramat.old` (`ramat.exe.old` on Windows). To only be
+  told (a line in `~/.ramat/daemon.log`), set `auto_update = false` in `config.toml`.
+  `ramat update` installs the latest version now; `ramat update --check` only says whether
+  there is one.
 - **Viewer**: when it starts, it installs a new version before you use it and opens again. When a
-  new version comes out while it is open, an **Update to …** button appears in the toolbar. The
-  Farms view shows the agent version of each machine and marks the ones that are behind.
+  new version comes out while it is open, an **Update to …** button appears in the toolbar.
 
 Older agents (before 0.10.0) do not update by themselves: run the install command once more.
 
@@ -147,94 +324,7 @@ On Windows, in PowerShell: `ramat service uninstall`, then delete
 
 Your local data stays in `~/.ramat` (and the viewer's login in
 `~/Library/Application Support/Ramat Viewer`): delete those folders too to remove everything.
-
-## Configuration
-
-The agent reads `~/.ramat/config.toml`. It is created with comments the first time the
-service starts. Changes apply a few seconds after you save the file, with no restart. While the
-service runs, a file with an error is ignored and the last good configuration stays; the reason
-is in `~/.ramat/daemon.log`. With an error at start, the service does not start, so a typo can
-never send more than you chose.
-
-```toml
-# Family of the sessions that match no folder rule.
-default_family = "personal"
-
-# Data level of that family: full, titles, metadata or none.
-default_data = "full"
-
-# A session that waits for you longer than this shows as idle.
-idle_after = "15m"
-
-# Local queue while the server cannot be reached.
-queue_max_days = 7
-queue_max_mb = 200
-
-# One block per folder rule.
-[[family]]
-folder = "~/work"
-family = "work"
-data = "metadata"
-```
-
-| Option | Default | What it does |
-|:--|:--|:--|
-| `default_family` | `default` | Family of the sessions started outside every `[[family]]` folder. |
-| `default_data` | `full` | Data level of the default family. |
-| `auto_update` | `true` | Install new versions of the agent by itself. `false`: only write in the log that one is available. |
-| `idle_after` | `15m` | A session waiting for you longer than this shows as **idle** instead of **waiting for you**: same meaning (your turn), it only goes lower in the list. A duration of at least `1m`, like `45m` or `2h`. |
-| `queue_max_days` | `7` | Events wait in a local queue while the server is not reachable. Older events are dropped. |
-| `queue_max_mb` | `200` | Size limit of that queue. When it is bigger, the oldest events are dropped. |
-| `[[family]]` `folder` | | Sessions started in this folder or below it belong to the family. `~` is your home folder. The most specific folder wins. |
-| `[[family]]` `family` | | Name of the family: a label to group and filter sessions in the viewer. |
-| `[[family]]` `data` | `full` | Data level of the family. When several rules of one family set it, the stricter level wins. |
-| `[[family]]` `encrypt` | `false` | Encrypt the family's content end to end: transcript and hook payloads (prompts, tool input and output, answers). Only your viewer can read it; the server cannot search it. |
-| `[[family]]` `encrypt_titles` | `false` | Encrypt the session names and the subagent tasks too. Without it they stay readable on the server. |
-| `default_encrypt`, `default_encrypt_titles` | `false` | The same, for the default family. |
-| `[[family]]` `control` | `true` | Let your viewer act on these sessions: close one, allow or deny a permission, answer a question. Commands are signed with your key; the server cannot make them. |
-| `default_control` | `true` | The same, for the default family. |
-
-A family groups sessions by folder: personal, work, a client. Each family is drawn as an animal
-(sheep, cow, horse, pig, chicken, goat, turkey or rabbit): pick it on the **Animals** page of the
-app or of the web. Agents 0.18 took `default_species` and `[species]` here; they do nothing now. Agents 0.14 to 0.17 also took
-the word **field** (`default_field`, `[[field]]`, `field = "..."`); since 0.18.0 the agent
-refuses it and says what to rename, so check your file if you used it.
-
-A session keeps the family it had when it started, even if you change the rules later. A new
-data level applies at once, also to events that were not sent yet.
-
-Built-in rule: sessions in `~/.claude-mem` (helper sessions of the claude-mem plugin) belong to
-the family `claude-mem` with data level `none`, so nothing of them leaves your machine. A rule
-for the same folder in the file replaces it, data level included.
-
-### Data levels: what leaves your machine
-
-| Level | What is sent to the server |
-|:--|:--|
-| `full` | Everything below, plus prompts, tool input and output, Claude's answers and the transcript of the conversation (long texts are cut at 64 KB). |
-| `titles` | Everything below, plus the session name and the task of each subagent. |
-| `metadata` | Session state, tool names, times, folder, model and token counts. |
-| `none` | Nothing. The sessions stay on your machine: `ramat status` still shows them. |
-
-Environment variables are never sent, at any level: only a few that Claude Code sets itself
-(its version, the process id, CLI or desktop app).
-
-### End-to-end encryption
-
-A family with `encrypt = true` sends its content sealed with your key: only your viewer can
-read it, the server stores it but cannot read or search it. State, tools, times, model and
-token counts are never encrypted, so the session list works the same.
-
-1. In the viewer, open **Encryption** in the toolbar and create your key with a passphrase.
-   Save the **recovery key** it shows in your password manager: without the passphrase and the
-   recovery key, encrypted data cannot be read by anyone.
-2. Each agent pins your key the next time it connects. Check that `ramat key` shows the same
-   fingerprint as the viewer.
-3. Turn on `encrypt` (and, if you want, `encrypt_titles`) for the families you choose.
-
-Until an agent has your key, an encrypted family sends no content at all, and that content is
-not sent later: create the key before turning `encrypt` on. On another Mac, the viewer unlocks
-the key with your passphrase (or the recovery key).
+To remove a machine from your account, revoke it in the viewer (Farms) or on the web.
 
 ## Manifest and signature
 
