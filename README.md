@@ -9,8 +9,8 @@ Ramat has three parts:
 - **Agent** (`ramat`): runs on each machine where you use Claude Code (macOS, Linux, and
   Windows as an experiment). It gets the session events from a Claude Code plugin and sends
   them to the Ramat server.
-- **Viewer** (Ramat.app): a macOS app that shows the sessions of all your machines, live. It is
-  also where you read encrypted content and act on sessions.
+- **Viewer** (Ramat.app): a macOS app, and an experimental Windows one, that shows the sessions
+  of all your machines, live. It is also where you read encrypted content and act on sessions.
 - **Server and web** (`https://ramat.app`): run for you. On the web you manage your account,
   your machines and the animals of your families. The web does not show sessions.
 
@@ -22,7 +22,7 @@ link, open it and create your account.
 | Part | Needs |
 |:--|:--|
 | Agent | Claude Code on a Mac (Apple silicon or Intel), on Linux (x86-64 or ARM64, with systemd), or on Windows 10 or later ([experimental](#windows-experimental)). |
-| Viewer | A Mac with Apple silicon and macOS 15 or later. |
+| Viewer | A Mac with Apple silicon and macOS 15 or later, or Windows 10 or later ([experimental](#windows-viewer-experimental)). |
 
 ## Getting started
 
@@ -57,6 +57,22 @@ curl -fsSL https://raw.githubusercontent.com/alberthorta/ramat-releases/main/ins
 Both put Ramat.app in `/Applications`. Open it and press **Log In with the Browser**: a browser
 page opens, log in and authorize the viewer, like for a machine. The login key of the viewer is
 kept in the Secure Enclave of your Mac.
+
+### Windows viewer (experimental)
+
+The Windows viewer has run only in automated tests so far, never on a real machine. It needs
+Windows 10 or 11 with the WebView2 runtime (part of Windows 11 and of an updated Windows 10).
+To try it, run this in PowerShell (as yourself, not as administrator):
+
+```powershell
+iex "& { $(irm https://raw.githubusercontent.com/alberthorta/ramat-releases/main/install.ps1) } viewer"
+```
+
+It checks the SHA-256 of the download, copies `Ramat.exe` to `%LOCALAPPDATA%\Programs\Ramat`,
+adds Ramat to the Start menu and opens it. Log in with the browser as on a Mac. The login key
+and the unlocked encryption key are kept in files protected by Windows for your user account
+(DPAPI): they do not work on another computer or account, but they are not in a hardware chip
+like on a Mac. It updates itself.
 
 ## Install the agent
 
