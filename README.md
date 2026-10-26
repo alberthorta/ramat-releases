@@ -73,6 +73,11 @@ and the unlocked encryption key are kept in files protected by Windows for your 
 (DPAPI): they do not work on another computer or account, but they are not in a hardware chip
 like on a Mac. It updates itself.
 
+Or download the zip from `https://ramat.app/download/windows` (`/download/windows/arm64` for
+a PC with an ARM chip), unzip it to a folder of yours and open `Ramat.exe`. It is not signed
+yet, so Windows may stop it the first time: choose **More info**, then **Run anyway**. This
+way adds no Start menu entry.
+
 ## Install the agent
 
 Run this in a terminal on each machine with Claude Code:
